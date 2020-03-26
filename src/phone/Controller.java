@@ -1,4 +1,4 @@
-package sample;
+package phone;
 
 public class Controller {
 }
