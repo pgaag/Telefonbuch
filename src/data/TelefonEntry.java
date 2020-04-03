@@ -5,6 +5,8 @@ import java.util.Objects;
 public class TelefonEntry {
     private String firstName;
     private String lastName;
+
+    // number is a String because User might save the number with a plus for country codes (+49) or with a slash 0165/xxxxxx
     private String number;
 
     public TelefonEntry(String firstName, String lastName, String number) {
