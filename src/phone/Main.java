@@ -26,6 +26,7 @@ public class Main extends Application {
         var list = new ArrayList<TelefonEntry>();
         list.add(new TelefonEntry("Hallo", "Test", "12345"));
         list.add(new TelefonEntry("Rosie", "Rosie", "32168"));
+        list.add(new TelefonEntry("The", "Beast", "666"));
 
         ObservableList<TelefonEntry> telefonEntries = FXCollections.observableList(list);
         var telefonBook = new TelefonBook(telefonEntries);
