@@ -3,6 +3,8 @@ package ui;
 import interfaces.AddInterface;
 import data.TelefonBook;
 import data.TelefonEntry;
+import interfaces.DeleteInterface;
+import interfaces.GetInterface;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -18,10 +20,9 @@ import java.util.List;
 public class EntryArea {
     private final AnchorPane anchorPane = new AnchorPane();
     private final TableView<TelefonEntry> tableView;
-    private TelefonBook telefonBook;
 
 
-    public EntryArea(AddInterface addInterface) {
+    public EntryArea(GetInterface getInterface, DeleteInterface deleteInterface) {
         tableView = new TableView<>();
         AnchorPane.setLeftAnchor(tableView, 10.0);
         AnchorPane.setRightAnchor(tableView, 10.0);
@@ -50,22 +51,19 @@ public class EntryArea {
         tableView.getColumns().add(firstNameCol);
         tableView.getColumns().add(lastNameCol);
         tableView.getColumns().add(emailCol);
-        tableView.setItems(telefonBook.getFilteredList());
+        tableView.setItems(getInterface.get());
         tableView.setEditable(true);
-        tableView.setOnKeyPressed(keyEvent -> keyPressed(keyEvent));
+        tableView.setOnKeyPressed(keyEvent -> keyPressed(keyEvent, deleteInterface));
     }
 
-    private void keyPressed(KeyEvent keyEvent){
+    private void keyPressed(KeyEvent keyEvent, DeleteInterface deleteInterface){
         var selection = tableView.getSelectionModel().getSelectedItem();
         if (selection != null) {
             if ( keyEvent.getCode().equals( KeyCode.DELETE ) ){
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selection.getFirstName() + " " + selection.getLastName() + " Tel.: " + selection.getNumber() + " ?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
                 alert.showAndWait();
-
                 if (alert.getResult() == ButtonType.YES) {
-                    var telefonEntry = telefonBook.getTelefonEntry(selection.getFirstName(), selection.getLastName(), selection.getNumber());
-                    if(telefonEntry != null)
-                        telefonBook.getTelefonEntries().remove(telefonEntry);
+                    deleteInterface.delete(selection.getFirstName(), selection.getLastName(), selection.getNumber());
                 }
             }
         }
@@ -83,9 +81,6 @@ public class EntryArea {
         return anchorPane;
     }
 
-    public void setTelefonBook(TelefonBook telefonBook) {
-        this.telefonBook = telefonBook;
-    }
 
 private static class EditingCell extends TableCell<TelefonEntry, String> {
 

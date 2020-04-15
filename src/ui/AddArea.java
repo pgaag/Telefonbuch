@@ -17,8 +17,6 @@ public class AddArea{
     private final TextField lastNameTextField = new TextField();
     private final TextField numberTextField = new TextField();
     private final Button addButton  = new Button("Hinzufügen");
-    private TelefonBook telefonBook;
-
 
     public AddArea(AddInterface addInterface) {
         addButton.setPrefSize(80.0, 20.0);
@@ -57,14 +55,8 @@ public class AddArea{
         this.numberTextField.clear();
     }
 
-
-
     public Node getPane() {
         return anchorPane;
     }
 
-
-    public void setTelefonBook(TelefonBook telefonBook) {
-        this.telefonBook = telefonBook;
-    }
 }

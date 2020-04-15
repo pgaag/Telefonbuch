@@ -1,7 +1,5 @@
 package interfaces;
 
-import data.TelefonEntry;
-
 public interface DeleteInterface {
-    void delete(TelefonEntry telefonEntry);
+    void delete(String firstName, String lastName, String number);
 }

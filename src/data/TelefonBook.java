@@ -33,18 +33,27 @@ public class TelefonBook {
         this.telefonEntries = telefonEntries;
         setFilteredList(telefonEntries.filtered(s -> true));
     }
-    public TelefonEntry getTelefonEntry(String firstName, String lastName, String number){
-        for (TelefonEntry telefonEntry: this.telefonEntries) {
-            if(telefonEntry.getNumber().equals(number) && telefonEntry.getLastName().equals(lastName) && telefonEntry.getFirstName().equals(firstName))
-                return telefonEntry;
-        }
-        return null;
-    }
+
     public void add(TelefonEntry telefonEntry){
         this.telefonEntries.add(telefonEntry);
     }
-    public void delete(TelefonEntry telefonEntry){
-        if(this.telefonEntries.contains(telefonEntry))
-            this.telefonEntries.remove(telefonEntry);
+    public void delete(String firstName, String lastName, String number){
+        TelefonEntry telefonEntry = this.telefonEntries.stream()
+                .filter((entry) -> entry.getFirstName().equals(firstName) && entry.getLastName().equals(lastName) && entry.getNumber().equals(number))
+                .findFirst()
+                .orElse(null);
+        this.telefonEntries.remove(telefonEntry);
+    }
+    public void searchAndFilter(String filter){
+        if(filter.length() == 0) {
+            this.getFilteredList().setPredicate(s -> true);
+        }
+        else {
+            this.getFilteredList().setPredicate(s -> s.getFirstName().toLowerCase().contains(filter) ||s.getLastName().toLowerCase().contains(filter) || s.getNumber().toLowerCase().contains(filter));
+        }
+    }
+    public void loadTelefonEntires(ObservableList<TelefonEntry> telefonEntries){
+        this.telefonEntries.setAll(telefonEntries);
+        setFilteredList(this.telefonEntries.filtered(s -> true));
     }
 }
