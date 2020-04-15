@@ -31,6 +31,7 @@ public class TelefonBook {
 
     public void setTelefonEntries(ObservableList<TelefonEntry> telefonEntries) {
         this.telefonEntries = telefonEntries;
+        setFilteredList(telefonEntries.filtered(s -> true));
     }
     public TelefonEntry getTelefonEntry(String firstName, String lastName, String number){
         for (TelefonEntry telefonEntry: this.telefonEntries) {
@@ -38,5 +39,12 @@ public class TelefonBook {
                 return telefonEntry;
         }
         return null;
+    }
+    public void add(TelefonEntry telefonEntry){
+        this.telefonEntries.add(telefonEntry);
+    }
+    public void delete(TelefonEntry telefonEntry){
+        if(this.telefonEntries.contains(telefonEntry))
+            this.telefonEntries.remove(telefonEntry);
     }
 }

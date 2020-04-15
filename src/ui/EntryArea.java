@@ -1,12 +1,11 @@
 package ui;
 
+import interfaces.AddInterface;
 import data.TelefonBook;
 import data.TelefonEntry;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -22,14 +21,14 @@ public class EntryArea {
     private TelefonBook telefonBook;
 
 
-    public EntryArea(TelefonBook telefonBook) {
-        setTelefonBook(telefonBook);
+    public EntryArea(AddInterface addInterface) {
         tableView = new TableView<>();
         AnchorPane.setLeftAnchor(tableView, 10.0);
         AnchorPane.setRightAnchor(tableView, 10.0);
         AnchorPane.setTopAnchor(tableView, 0.0);
         AnchorPane.setBottomAnchor(tableView, 0.0);
         anchorPane.getChildren().addAll(tableView);
+        anchorPane.setPadding(new Insets(0,0,10.0,0));
 
         Callback<TableColumn<TelefonEntry, String>, TableCell<TelefonEntry, String>> cellFactory = p -> new EditingCell();
 
@@ -47,7 +46,6 @@ public class EntryArea {
         emailCol.setCellValueFactory(new PropertyValueFactory<>("number"));
         emailCol.setCellFactory(cellFactory);
         emailCol.setOnEditCommit(t -> getCurrentRow(t).setNumber(t.getNewValue()));
-
 
         tableView.getColumns().add(firstNameCol);
         tableView.getColumns().add(lastNameCol);
@@ -81,20 +79,8 @@ public class EntryArea {
         }
     }
 
-    public ObservableList<TelefonEntry> getItems() {
-        return tableView.getItems();
-    }
-
     public AnchorPane getAnchorPane() {
         return anchorPane;
-    }
-
-    public ObservableList<TelefonEntry> getSelectedEntries() {
-        return tableView.getSelectionModel().getSelectedItems();
-    }
-
-    public TelefonBook getTelefonBook() {
-        return telefonBook;
     }
 
     public void setTelefonBook(TelefonBook telefonBook) {

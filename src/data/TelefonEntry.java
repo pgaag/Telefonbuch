@@ -14,6 +14,7 @@ public class TelefonEntry {
         setLastName(lastName);
         setNumber(number);
     }
+    public TelefonEntry(){ }
 
     public String getFirstName() {
         return this.firstName;

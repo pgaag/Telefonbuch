@@ -1,5 +1,6 @@
 package ui;
 
+import interfaces.AddInterface;
 import data.TelefonBook;
 import data.TelefonEntry;
 import javafx.scene.Node;
@@ -8,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-public class AddArea {
+public class AddArea{
 
     private final GridPane gridPane = new GridPane();
     private final AnchorPane anchorPane = new AnchorPane();
@@ -19,8 +20,7 @@ public class AddArea {
     private TelefonBook telefonBook;
 
 
-    public AddArea(TelefonBook telefonBook) {
-        setTelefonBook(telefonBook);
+    public AddArea(AddInterface addInterface) {
         addButton.setPrefSize(80.0, 20.0);
 
         firstNameTextField.setPromptText("First name");
@@ -40,15 +40,15 @@ public class AddArea {
         AnchorPane.setRightAnchor(addButton, 10.0);
         AnchorPane.setBottomAnchor(addButton, 10.0);
 
-        addButton.setOnAction(event -> addButtonClicked());
+        addButton.setOnAction(event -> addButtonClicked(addInterface));
 
         gridPane.getChildren().addAll(lastNameTextField, firstNameTextField, numberTextField);
         anchorPane.getChildren().addAll(gridPane, addButton);
     }
 
-    private void addButtonClicked() {
+    private void addButtonClicked(AddInterface addInterface) {
         var newTelefonEntry = new TelefonEntry(this.firstNameTextField.getText(), this.lastNameTextField.getText(), this.numberTextField.getText());
-        this.telefonBook.getTelefonEntries().add(newTelefonEntry);
+        addInterface.add(newTelefonEntry);
         clearTextFields();
     }
     private void clearTextFields(){
