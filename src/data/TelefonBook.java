@@ -2,10 +2,12 @@ package data;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TelefonBook {
@@ -55,5 +57,13 @@ public class TelefonBook {
     public void loadTelefonEntires(ObservableList<TelefonEntry> telefonEntries){
         this.telefonEntries.setAll(telefonEntries);
         setFilteredList(this.telefonEntries.filtered(s -> true));
+    }
+    public static TelefonBook createDummyTelefonBook(){
+        var list = new ArrayList<TelefonEntry>();
+        list.add(new TelefonEntry("Blank", "Blank", "000"));
+
+        ObservableList<TelefonEntry> telefonEntries = FXCollections.observableList(list);
+        var telefonBook = new TelefonBook(telefonEntries);
+        return telefonBook;
     }
 }

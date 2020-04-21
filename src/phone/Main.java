@@ -2,20 +2,25 @@ package phone;
 
 import data.JsonFileSystemDataHandler;
 import data.TelefonBook;
+import data.TelefonBookInterfaceImplementation;
 import data.TelefonEntry;
+import interfaces.JsonInterface;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import ui.AddArea;
-import ui.EntryArea;
-import ui.SaveAndLoadMenuBar;
-import ui.SearchArea;
+import ui.*;
 
 
+import java.beans.EventHandler;
 import java.util.ArrayList;
 
 
@@ -34,26 +39,47 @@ public class Main extends Application  {
         var telefonBook = new TelefonBook(telefonEntries);
         var jsonDataHandler = new JsonFileSystemDataHandler();
 
-        EntryArea entryArea = new EntryArea(telefonBook::getFilteredList, telefonBook::delete);
-        SearchArea searchArea = new SearchArea(telefonBook::searchAndFilter);
-        AddArea addArea = new AddArea(telefonBook::add);
+        TelefonBookInterfaceImplementation impl = new TelefonBookInterfaceImplementation(telefonBook);
 
-        // I opted for a MenuBar to implement the save and load functionality
-        SaveAndLoadMenuBar searchAndLoadMenuBar= new SaveAndLoadMenuBar(
+
+
+        TelefonbookArea telefonbookArea = new TelefonbookArea(
+                telefonBook::getFilteredList,
+                telefonBook::delete,
+                telefonBook::searchAndFilter,
+                telefonBook::add,
                 jsonDataHandler::loadTelefonBook,
                 loadedEntries -> telefonBook.loadTelefonEntires(FXCollections.observableList(loadedEntries)),
-                saveDest -> jsonDataHandler.saveTelefonBook(saveDest, telefonBook.getTelefonEntries()));
+                saveDest -> jsonDataHandler.saveTelefonBook(saveDest, telefonBook.getTelefonEntries())
+                );
 
-        root.setTop(searchArea.getPane());
-        root.setCenter(entryArea.getAnchorPane());
-        root.setBottom(addArea.getPane());
 
-        VBox vBox = new VBox(searchAndLoadMenuBar.getMenuBar(), root);
-        Scene mainScene = new Scene(vBox, 400, 275);
+        root.setRight(abc().getBorderPane());
+        root.setCenter(telefonbookArea.getBorderPane());
+
+
+
+        Scene mainScene = new Scene(root, 400, 275);
 
         primaryStage.setTitle("Telefonbuch");
         primaryStage.setScene(mainScene);
         primaryStage.show();
+    }
+
+
+    private TelefonbookArea abc() {
+        var telefonBook = TelefonBook.createDummyTelefonBook();
+        var jsonDataHandler = new JsonFileSystemDataHandler();
+        var newTelefonBookArea = new TelefonbookArea(
+                telefonBook::getFilteredList,
+                telefonBook::delete,
+                telefonBook::searchAndFilter,
+                telefonBook::add,
+                jsonDataHandler::loadTelefonBook,
+                loadedEntries -> telefonBook.loadTelefonEntires(FXCollections.observableList(loadedEntries)),
+                saveDest -> jsonDataHandler.saveTelefonBook(saveDest, telefonBook.getTelefonEntries())
+        );
+        return newTelefonBookArea;
     }
 
     public static void main(String[] args) {
