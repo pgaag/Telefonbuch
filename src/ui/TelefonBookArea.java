@@ -6,12 +6,12 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class TelefonbookArea {
+public class TelefonBookArea {
 
     public BorderPane borderPane = new BorderPane();
 
 
-    public TelefonbookArea(GetInterface getFilteredList, DeleteInterface delete, SearchInterface searchAndFilter, AddInterface add, JsonInterface jsonInterface, LoadInterface loadInterface, SaveInterface saveInterface) {
+    public TelefonBookArea(GetInterface getFilteredList, DeleteInterface delete, SearchInterface searchAndFilter, AddInterface add, JsonInterface jsonInterface, LoadInterface loadInterface, SaveInterface saveInterface) {
 
         EntryArea entryArea = new EntryArea(getFilteredList, delete);
         SearchArea searchArea = new SearchArea(searchAndFilter);

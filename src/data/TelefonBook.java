@@ -60,8 +60,6 @@ public class TelefonBook {
     }
     public static TelefonBook createDummyTelefonBook(){
         var list = new ArrayList<TelefonEntry>();
-        list.add(new TelefonEntry("Blank", "Blank", "000"));
-
         ObservableList<TelefonEntry> telefonEntries = FXCollections.observableList(list);
         var telefonBook = new TelefonBook(telefonEntries);
         return telefonBook;
