@@ -1,7 +1,7 @@
 package ui;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import interfaces.AddInterface;
-import data.TelefonBook;
 import data.TelefonEntry;
 import interfaces.DeleteInterface;
 import interfaces.GetInterface;
@@ -10,8 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 
@@ -22,7 +21,7 @@ public class EntryArea {
     private final TableView<TelefonEntry> tableView;
 
 
-    public EntryArea(GetInterface getInterface, DeleteInterface deleteInterface) {
+    public EntryArea(GetInterface getInterface, DeleteInterface deleteInterface, AddInterface addInterface) {
         tableView = new TableView<>();
         AnchorPane.setLeftAnchor(tableView, 10.0);
         AnchorPane.setRightAnchor(tableView, 10.0);
@@ -54,7 +53,46 @@ public class EntryArea {
         tableView.setItems(getInterface.get());
         tableView.setEditable(true);
         tableView.setOnKeyPressed(keyEvent -> keyPressed(keyEvent, deleteInterface));
+        tableView.setOnDragDetected(event -> handleDragDetection(event));
+        tableView.setOnDragOver(event -> handleTextDragOver(event));
+        tableView.setOnDragDropped(event -> setOnDragDropped(event, addInterface, getInterface));
     }
+
+    private void handleTextDragOver(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        if (event.getDragboard().hasString()){
+            event.acceptTransferModes(TransferMode.ANY);
+        }
+        event.consume();
+    }
+
+    private void handleDragDetection(MouseEvent event) {
+        TelefonEntry selected = tableView.getSelectionModel().getSelectedItem();
+        if(selected != null){
+            Dragboard dragboard = tableView.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            var string = selected.getFirstName() + "---" + selected.getLastName() + "---" + selected.getNumber();
+            content.putString(string);
+            dragboard.setContent(content);
+        }
+        event.consume();
+    }
+
+    private void setOnDragDropped(DragEvent event, AddInterface addInterface, GetInterface getInterface){
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        if (event.getDragboard().hasString()) {
+            String draggedString = db.getString();
+            String[] telefonEntry = draggedString.split("---", 3);
+            TelefonEntry entry = new TelefonEntry(telefonEntry[0], telefonEntry[1], telefonEntry[2]);
+            addInterface.add(entry);
+            tableView.setItems(getInterface.get());
+            success = true;
+        }
+        event.setDropCompleted(success);
+        event.consume();
+    }
+    
 
     private void keyPressed(KeyEvent keyEvent, DeleteInterface deleteInterface){
         var selection = tableView.getSelectionModel().getSelectedItem();
@@ -148,5 +186,7 @@ private static class EditingCell extends TableCell<TelefonEntry, String> {
     private static TelefonEntry getCurrentRow(TableColumn.CellEditEvent<TelefonEntry, String> t) {
         return t.getTableView().getItems().get(t.getTablePosition().getRow());
     }
+
+
 
 }

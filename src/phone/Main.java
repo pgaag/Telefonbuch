@@ -30,57 +30,20 @@ public class Main extends Application  {
         ObservableList<TelefonEntry> telefonEntries = FXCollections.observableList(list);
         var telefonBook = new TelefonBook(telefonEntries);
         var secondTelefonBook = TelefonBook.createDummyTelefonBook();
-        var jsonDataHandler = new JsonFileSystemDataHandler();
 
-        TelefonBookInterfaceImplementation impl = new TelefonBookInterfaceImplementation(telefonBook);
+        var telefonBookImpl = new TelefonBookInterfaceImplementation(telefonBook);
+        var secondTelefonBookImpl = new TelefonBookInterfaceImplementation(secondTelefonBook);
 
-
-
-
-        TelefonBookArea mainTelefonBookArea = new TelefonBookArea(
-                telefonBook::getFilteredList,
-                telefonBook::delete,
-                telefonBook::searchAndFilter,
-                telefonBook::add,
-                jsonDataHandler::loadTelefonBook,
-                loadedEntries -> telefonBook.loadTelefonEntires(FXCollections.observableList(loadedEntries)),
-                saveDest -> jsonDataHandler.saveTelefonBook(saveDest, telefonBook.getTelefonEntries())
-                );
-        TelefonBookArea secondTelefonBookArea = new TelefonBookArea(
-                secondTelefonBook::getFilteredList,
-                secondTelefonBook::delete,
-                secondTelefonBook::searchAndFilter,
-                secondTelefonBook::add,
-                jsonDataHandler::loadTelefonBook,
-                loadedEntries -> telefonBook.loadTelefonEntires(FXCollections.observableList(loadedEntries)),
-                saveDest -> jsonDataHandler.saveTelefonBook(saveDest, telefonBook.getTelefonEntries())
-        );
+        TelefonBookArea mainTelefonBookArea = new TelefonBookArea(telefonBookImpl);
+        TelefonBookArea secondTelefonBookArea = new TelefonBookArea(secondTelefonBookImpl);
 
         root.getChildren().addAll(mainTelefonBookArea.getBorderPane(), secondTelefonBookArea.getBorderPane());
-
-
 
         Scene mainScene = new Scene(root, 1180, 530);
 
         primaryStage.setTitle("Telefonbuch");
         primaryStage.setScene(mainScene);
         primaryStage.show();
-    }
-
-
-    private TelefonBookArea abc() {
-        var telefonBook = TelefonBook.createDummyTelefonBook();
-        var jsonDataHandler = new JsonFileSystemDataHandler();
-        var newTelefonBookArea = new TelefonBookArea(
-                telefonBook::getFilteredList,
-                telefonBook::delete,
-                telefonBook::searchAndFilter,
-                telefonBook::add,
-                jsonDataHandler::loadTelefonBook,
-                loadedEntries -> telefonBook.loadTelefonEntires(FXCollections.observableList(loadedEntries)),
-                saveDest -> jsonDataHandler.saveTelefonBook(saveDest, telefonBook.getTelefonEntries())
-        );
-        return newTelefonBookArea;
     }
 
     public static void main(String[] args) {

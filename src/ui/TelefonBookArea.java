@@ -11,13 +11,13 @@ public class TelefonBookArea {
     public BorderPane borderPane = new BorderPane();
 
 
-    public TelefonBookArea(GetInterface getFilteredList, DeleteInterface delete, SearchInterface searchAndFilter, AddInterface add, JsonInterface jsonInterface, LoadInterface loadInterface, SaveInterface saveInterface) {
+    public TelefonBookArea(TelefonBookInterface telefonBookInterface) {
 
-        EntryArea entryArea = new EntryArea(getFilteredList, delete);
-        SearchArea searchArea = new SearchArea(searchAndFilter);
-        AddArea addArea = new AddArea(add);
+        EntryArea entryArea = new EntryArea(telefonBookInterface::get, telefonBookInterface::delete, telefonBookInterface::add);
+        SearchArea searchArea = new SearchArea(telefonBookInterface::search);
+        AddArea addArea = new AddArea(telefonBookInterface::add);
         // I opted for a MenuBar to implement the save and load functionality
-        SaveAndLoadMenuBar searchAndLoadMenuBar= new SaveAndLoadMenuBar(jsonInterface, loadInterface, saveInterface);
+        SaveAndLoadMenuBar searchAndLoadMenuBar= new SaveAndLoadMenuBar(telefonBookInterface::getEntriesFromFile, telefonBookInterface::loadTelefonBook, telefonBookInterface::saveTelefonBook);
 
         VBox vBox = new VBox( searchAndLoadMenuBar.getMenuBar(), searchArea.getPane());
 
