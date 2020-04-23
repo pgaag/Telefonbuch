@@ -1,5 +1,6 @@
 package ui;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import interfaces.AddInterface;
 import data.TelefonEntry;
@@ -66,12 +67,18 @@ public class EntryArea {
         event.consume();
     }
 
-    private void handleDragDetection(MouseEvent event) {
+    private void handleDragDetection(MouseEvent event){
         TelefonEntry selected = tableView.getSelectionModel().getSelectedItem();
         if(selected != null){
             Dragboard dragboard = tableView.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
-            var string = selected.getFirstName() + "---" + selected.getLastName() + "---" + selected.getNumber();
+            ObjectMapper mapper = new ObjectMapper();
+            String string = null;
+            try {
+                string = mapper.writeValueAsString(selected);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             content.putString(string);
             dragboard.setContent(content);
         }
@@ -83,8 +90,13 @@ public class EntryArea {
         boolean success = false;
         if (event.getDragboard().hasString()) {
             String draggedString = db.getString();
-            String[] telefonEntry = draggedString.split("---", 3);
-            TelefonEntry entry = new TelefonEntry(telefonEntry[0], telefonEntry[1], telefonEntry[2]);
+            ObjectMapper mapper = new ObjectMapper();
+            TelefonEntry entry = null;
+            try {
+                entry = mapper.readValue(draggedString, TelefonEntry.class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             addInterface.add(entry);
             tableView.setItems(getInterface.get());
             success = true;
