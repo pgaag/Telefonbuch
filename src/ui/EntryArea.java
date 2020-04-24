@@ -60,7 +60,6 @@ public class EntryArea {
     }
 
     private void handleTextDragOver(DragEvent event) {
-        Dragboard db = event.getDragboard();
         if (event.getDragboard().hasString()){
             event.acceptTransferModes(TransferMode.ANY);
         }
